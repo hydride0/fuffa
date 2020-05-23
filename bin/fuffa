@@ -5,46 +5,38 @@ require 'optparse'
 require 'uri'
 
 options = {
-  :url => "",
-  :wordlist => ""
+  url: '',
+  wordlist: '',
+  port: 80
 }
 
 option_parse = OptionParser.new do |opt|
   opt.on '-u', '--url URL', 'url to be fuzzed' do |url|
-    if url =~ URI::regexp
-      if url.include? "FUZZ"
-        options[:url] = url
-      else 
-        abort "Url doesn't contain FUZZ keyword."
-      end
-    else 
-      abort "Not a valid url."
-    end
+    abort 'Not a valid url.' unless url =~ URI::regexp
+    abort 'Url doesn\'t contain FUZZ keyword' unless url.include? 'FUZZ'
+    options[:url] = url
   end
 
   opt.on '-w', '--wordlist WORDLIST', 'wordlist used to fuzz' do |wl|
-    if File.exists? wl 
-      if File.readable? wl
-        options[:wordlist] = wl
-      else
-        abort "Wordlist given is not readable. Check permissions and retry."
-      end
-    else
-      abort "Wordlist provided doesn't exist."
-    end
+    abort 'Wordlist provided doesn\'t exist' unless File.exists? wl
+    abort 'Wordlist given is not readable. Check permissions and retry.' unless File.readable? wl
+    options[:wordlist] = wl
   end
 
   opt.on '-h', '--help' do
-    puts opt
-    exit
+    abort opt
+  end
+  
+  opt.on '-p', '--port' do |port|
+    # ...
   end
 end
 option_parse.parse!
 
-if options[:wordlist] == "" or options[:url] == ""
+if options[:wordlist].empty? || options[:url].empty?
   abort option_parse.help
 end
 
-fuzzer = Fuffa::Fuzzer.new(options[:url], options[:wordlist])
+fuzzer = Fuffa::Fuzzer.new(options[:url], options[:port], options[:wordlist])
 fuzzer.fuzz()
 Fuffa::Utils.put_table(fuzzer)
