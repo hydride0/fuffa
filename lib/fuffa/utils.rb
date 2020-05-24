@@ -3,6 +3,8 @@ class Fuffa
     RED    = ['\e[0;31;49m', '\e[0m']
     YELLOW = ['\e[0;33;49m', '\e[0m']
     GREEN  = ['\e[0;32;49m', '\e[0m']
+    SUPPORTED_RESPONSES = ['400','401','403','404','405','500','501','301',
+                           '302','303','304','307','200','201','202','204']
   
     def self.get_file(wl_path)
       if File.exists?(wl_path) && File.readable?(wl_path)
@@ -25,19 +27,28 @@ class Fuffa
       end
     end
 
-    def self.put_table(fuzzer)
-      if !fuzzer.results.empty?
+    def self.get_output(fuzzer)
+      # TODO Add output type switch: default (table) or json
+      unless fuzzer.results.empty?
         table = Terminal::Table.new headings: ['URL', 'Response'] do |t|
           fuzzer.results.each do |res|
             t << [res[:url], res[:code]]
             t << :separator
           end
         end
-        puts table
+        table
       else
-        puts 'No results.'
+        'No results.'
       end
     end
 
+    def self.check_response_codes(codes)
+      code_list = codes.delete(' ').split(',').uniq
+      if (code_list - SUPPORTED_RESPONSES).empty?
+        code_list
+      else
+        nil
+    end
+    
   end
 end

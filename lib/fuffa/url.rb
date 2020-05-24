@@ -1,17 +1,17 @@
 class Fuffa
   class Url
-    def initialize(url, port=80)
-      if URI::regexp =~ url && url.include?('FUZZ')
+    def initialize(url, port=80, fuzz_word='FUZZ')
+      if URI::regexp =~ url && url.include?(fuzz_word)
         @url = URI(url)
-        
+        @fuzz_word = fuzz_word
         @url.port = port if (1024..65535).include?(port)
       #else 
         # raise BadUrlException????
       end
     end
 
-    def fuzz_with(fuzz_word)
-      URI(@url.to_s.gsub('FUZZ', fuzz_word))
+    def fuzz_with(word)
+      URI(@url.to_s.gsub(@fuzz_word, word))
     end
 
     def self.get_response_code(url) 

@@ -14,6 +14,5 @@ Gem::Specification.new { |s|
   s.executables  = 'fuffa'
   s.license      = 'Nonstandard'
 
-  s.add_dependency 'colorize', '~> 0.8'
   s.add_dependency 'terminal-table', '~> 1.8'
 }
