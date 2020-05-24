@@ -1,7 +1,7 @@
 require 'uri'
 require 'http'
-require 'terminal-table'
 require 'net/http'
+require 'colorize'
 
 require 'fuffa/fuzzer'
 require 'fuffa/url'

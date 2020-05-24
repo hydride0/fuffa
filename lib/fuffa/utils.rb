@@ -1,8 +1,5 @@
 class Fuffa
   class Utils
-    RED    = ['\e[0;31;49m', '\e[0m']
-    YELLOW = ['\e[0;33;49m', '\e[0m']
-    GREEN  = ['\e[0;32;49m', '\e[0m']
     SUPPORTED_RESPONSES = ['400','401','403','404','405','500','501','301',
                            '302','303','304','307','200','201','202','204']
   
@@ -17,26 +14,27 @@ class Fuffa
     def self.colorize(code)
       case code
       when '400', '401', '403', '404', '405', '500', '501'
-        RED.join(code)
+        code.colorize :red
       when '301', '302', '303', '304', '307'
-        YELLOW.join(code)
+        code.colorize :yellow
       when '200', '201', '202', '204'
-        GREEN.join(code)
+        code.colorize :green
       else
         code
       end
     end
 
     def self.get_output(fuzzer)
-      # TODO Add output type switch: default (table) or json
       unless fuzzer.results.empty?
-        table = Terminal::Table.new headings: ['URL', 'Response'] do |t|
-          fuzzer.results.each do |res|
-            t << [res[:url], res[:code]]
-            t << :separator
-          end
+        if fuzzer.output == 'json'
+          fuzzer.results.to_json
+        else
+          ''.tap { |output|
+            fuzzer.results.each { |e| 
+              output << "#{e[:url].to_s} #{Fuffa::Utils.colorize(e[:code])}\n"
+            }
+          }
         end
-        table
       else
         'No results.'
       end
@@ -48,6 +46,7 @@ class Fuffa
         code_list
       else
         nil
+      end
     end
     
   end

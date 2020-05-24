@@ -5,12 +5,12 @@ require 'optparse'
 require 'uri'
 
 options = {
-  url: '',
-  wordlist: '',
-  port: 80,
+  url:       '',
+  wordlist:  '',
+  port:      80,
   fuzz_word: 'FUZZ',
-  output: 'default',
-  exclude: []
+  output:    'default',
+  exclude:   []
 }
 
 option_parse = OptionParser.new do |opt|
@@ -26,10 +26,10 @@ option_parse = OptionParser.new do |opt|
   end
 
   opt.on '-h', '--help' do
-    abort opt
+    abort opt.help
   end
   
-  opt.on '-p', '--port', 'set port on which webserver is running (default: 80)' do |port|
+  opt.on '-p', '--port PORT ', 'set port on which webserver is running (default: 80)' do |port|
     abort "Invalid port specified." unless (1024..65535).include?(options[:port])
     options[:port] = port.to_i
   end
@@ -49,14 +49,21 @@ option_parse = OptionParser.new do |opt|
   end
   
 end
-option_parse.parse!
+
+begin
+  option_parse.parse!
+rescue OptionParser::MissingArgument
+  abort option_parse.help
+end
 
 if options[:wordlist].empty? || options[:url].empty?
   abort option_parse.help
 end
 
-abort "Url doesn\'t contain \'#{options[:fuzz_word]}\' keyword" unless options[:url].include? options[:fuzz_word]
+unless options[:url].include? options[:fuzz_word]
+  abort "Url doesn't contain '#{options[:fuzz_word]}' fuzz word" 
+end
 
 fuzzer = Fuffa::Fuzzer.new(options)
 fuzzer.fuzz()
-puts Fuffa::Utils.get_table(fuzzer)
+puts Fuffa::Utils.get_output(fuzzer)

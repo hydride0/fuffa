@@ -1,14 +1,13 @@
 class Fuffa
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 end
 
 =begin TODO ########################################################
 fuzzer: add multithreading, fuzz more urls concurrently
 fuzzer: add some kind of timer to manage timeout?
-fuzzer: a better table, maybe json output for future things (Amoeba)
-
+fuzzer: multiple fuzz words
+fuzzer: initialize(opt): check opt somehow?
+fuffa: save on file -o/--save-on FILENAME
 utils: add exceptions
-utils: colors do not work, investigate
-
 url: add exceptions
-=end ########################################################
+=end ######################################################## 
