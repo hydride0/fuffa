@@ -9,8 +9,9 @@ options = {
   wordlist:  '',
   port:      80,
   fuzz_word: 'FUZZ',
-  output:    'default',
-  exclude:   []
+  json:      '',
+  exclude:   [],
+  verbose:   true
 }
 
 option_parse = OptionParser.new do |opt|
@@ -28,26 +29,29 @@ option_parse = OptionParser.new do |opt|
   opt.on '-h', '--help' do
     abort opt.help
   end
-  
+
+  opt.on '--not-verbose', 'useful only if you just want JSON' do
+    options[:verbose] = false
+  end
+
   opt.on '-p', '--port PORT ', 'set port on which webserver is running (default: 80)' do |port|
     abort "Invalid port specified." unless (1024..65535).include?(options[:port])
     options[:port] = port.to_i
   end
-  
+
   opt.on '-fz', '--fuzz-word FUZZWORD', 'set the fuzz word (default: FUZZ)' do |fuzz_word|
     options[:fuzz_word] = fuzz_word unless fuzz_word.empty?
   end
-  
+
   opt.on '-e', '--exclude RESPONSE_LIST', 
   'set response codes separated by comma that need to be filtered out (default: none)' do |codes|
     code_list = Fuffa::Utils.check_response_codes(codes)
     options[:exclude] = code_list unless code_list.nil?
   end
-  
-  opt.on '-f', '--out-format OUTPUT', "'default' or 'json'" do |output|
-    options[:output] = 'json' unless output != 'json'
+
+  opt.on '-j', '--json FILE', 'save JSON results to file' do |json_path|
+    options[:json] = json_path unless json_path.empty?
   end
-  
 end
 
 begin
@@ -66,4 +70,3 @@ end
 
 fuzzer = Fuffa::Fuzzer.new(options)
 fuzzer.fuzz()
-puts Fuffa::Utils.get_output(fuzzer)

@@ -11,10 +11,10 @@ class Fuffa
     end
 
     def fuzz_with(word)
-      URI(@url.to_s.gsub(@fuzz_word, word))
+      URI(@url.to_s.gsub(@fuzz_word, URI.encode_www_form_component(word)))
     end
 
-    def self.get_response_code(url) 
+    def self.get_response_code(url)
       response = Net::HTTP.start(url.host).head(url.path)
       if !response.nil?
         response.code

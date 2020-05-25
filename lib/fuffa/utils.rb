@@ -2,7 +2,7 @@ class Fuffa
   class Utils
     SUPPORTED_RESPONSES = ['400','401','403','404','405','500','501','301',
                            '302','303','304','307','200','201','202','204']
-  
+
     def self.get_file(wl_path)
       if File.exists?(wl_path) && File.readable?(wl_path)
         File.new(wl_path, 'r', chomp: true)
@@ -21,22 +21,6 @@ class Fuffa
         code.colorize :green
       else
         code
-      end
-    end
-
-    def self.get_output(fuzzer)
-      unless fuzzer.results.empty?
-        if fuzzer.output == 'json'
-          fuzzer.results.to_json
-        else
-          ''.tap { |output|
-            fuzzer.results.each { |e| 
-              output << "#{e[:url].to_s} #{Fuffa::Utils.colorize(e[:code])}\n"
-            }
-          }
-        end
-      else
-        'No results.'
       end
     end
 
