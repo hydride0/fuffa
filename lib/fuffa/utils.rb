@@ -10,6 +10,14 @@ class Fuffa
         # raise WordListException????
       end
     end
+    
+    def self.get_fileMT(wl_path)
+      if File.exists?(wl_path) && File.readable?(wl_path)
+        file = File.open(wl_path, 'r')
+        file.advise(:sequential)
+        file
+      end
+    end
 
     def self.colorize(code)
       case code

@@ -11,7 +11,8 @@ options = {
   fuzz_word: 'FUZZ',
   json:      '',
   exclude:   [],
-  verbose:   true
+  verbose:   true,
+  threads:   50
 }
 
 option_parse = OptionParser.new do |opt|
@@ -52,11 +53,15 @@ option_parse = OptionParser.new do |opt|
   opt.on '-j', '--json FILE', 'save JSON results to file' do |json_path|
     options[:json] = json_path unless json_path.empty?
   end
+  
+  opt.on '-t', '--threads N', 'run with N threads (default: 20)' do |threads|
+    options[:threads] = threads.to_i unless threads.to_i < 4 
+  end
 end
 
 begin
   option_parse.parse!
-rescue OptionParser::MissingArgument
+rescue OptionParser::MissingArgument, OptionParser::InvalidOption
   abort option_parse.help
 end
 
@@ -68,5 +73,5 @@ unless options[:url].include? options[:fuzz_word]
   abort "Url doesn't contain '#{options[:fuzz_word]}' fuzz word" 
 end
 
-fuzzer = Fuffa::Fuzzer.new(options)
+fuzzer = Fuffa::FuzzerMT.new(options)
 fuzzer.fuzz()

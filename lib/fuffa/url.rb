@@ -15,7 +15,7 @@ class Fuffa
     end
 
     def self.get_response_code(url)
-      response = Net::HTTP.start(url.host).head(url.path)
+      response = Net::HTTP.start(url.host, url.port).head(url.path)
       if !response.nil?
         response.code
       #else
