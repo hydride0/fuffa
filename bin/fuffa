@@ -12,7 +12,7 @@ options = {
   json:      '',
   exclude:   [],
   verbose:   true,
-  threads:   50
+  threads:   20
 }
 
 option_parse = OptionParser.new do |opt|
@@ -73,5 +73,5 @@ unless options[:url].include? options[:fuzz_word]
   abort "Url doesn't contain '#{options[:fuzz_word]}' fuzz word" 
 end
 
-fuzzer = Fuffa::FuzzerMT.new(options)
+fuzzer = Fuffa::Fuzzer.new(options)
 fuzzer.fuzz()

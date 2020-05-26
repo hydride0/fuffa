@@ -17,7 +17,7 @@ class Fuffa
       m = Mutex.new
       # forgive me
       n_lines = `wc -l #{@path}`.to_i
-      lines_per_th = [].tap{|a| @n_thr.times{a<<(n_lines/@n_thr).to_i}}
+      lines_per_th = [].tap{ |a| @n_thr.times { a << (n_lines/@n_thr).to_i } }
       lines_per_th[@n_thr-1] += n_lines % @n_thr
       tasks = []
       @n_thr.times do |th|
@@ -40,7 +40,7 @@ class Fuffa
           end
         end
       end
-      tasks.each { |t| t.join}
+      tasks.each { |t| t.join }
       write_json(@json_path) unless @json_path.empty?
     end
 
