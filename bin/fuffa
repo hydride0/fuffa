@@ -36,7 +36,7 @@ option_parse = OptionParser.new do |opt|
   end
 
   opt.on '-p', '--port PORT ', 'set port on which webserver is running (default: 80)' do |port|
-    abort "Invalid port specified." unless (1024..65535).include?(options[:port])
+    abort "Invalid port specified." unless (1024..65535).include?(port.to_i)
     options[:port] = port.to_i
   end
 
