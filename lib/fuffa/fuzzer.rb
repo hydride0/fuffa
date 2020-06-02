@@ -34,6 +34,7 @@ class Fuffa
               next
             rescue Errno::EHOSTUNREACH
               puts "'#{iter_url}' unreachable."
+              next
             end
             unless @exclude_resp.include? code
               m.synchronize { @results << {url: iter_url, code: code} }
