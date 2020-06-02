@@ -32,6 +32,8 @@ class Fuffa
             rescue Net::OpenTimeout
               puts "'#{iter_url}' timed out."
               next
+            rescue Errno::EHOSTUNREACH
+              puts "'#{iter_url}' unreachable."
             end
             unless @exclude_resp.include? code
               m.synchronize { @results << {url: iter_url, code: code} }
